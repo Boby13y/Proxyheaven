@@ -1,33 +1,11 @@
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("openButton").addEventListener("click", openWebsite);
-});
+document.getElementById("goButton").addEventListener("click", function () {
+  let url = document.getElementById("urlInput").value;
 
-function openWebsite() {
-  var url = document.getElementById("websiteURL").value;
-  var iframe = document.getElementById("websiteFrame");
-  var errorMessage = document.getElementById("error-message");
-
-  if (url) {
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = "http://" + url;
-    }
-
-    // Use the provided Vercel URL for the proxy
-    var proxyUrl = `https://proxyheaven.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
-
-    fetch(proxyUrl)
-      .then(response => response.text())
-      .then(data => {
-        iframe.srcdoc = data;
-        iframe.style.display = "block";
-        errorMessage.style.display = "none";
-      })
-      .catch(err => {
-        errorMessage.style.display = "block";
-        iframe.style.display = "none";
-      });
-  } else {
-    errorMessage.style.display = "block";
-    iframe.style.display = "none";
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    url = "http://" + url;
   }
-}
+
+  // Make sure you have a proxy server running on the backend
+  document.getElementById("proxyFrame").src = `/proxy?url=${encodeURIComponent(url)}`;
+  document.getElementById("proxyFrame").style.display = "block";
+});
