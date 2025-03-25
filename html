@@ -87,8 +87,8 @@
           url = "http://" + url;
         }
 
-        // Call the Vercel/Netlify function to proxy the URL
-        var proxyUrl = `https://your-vercel-domain.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
+        // Use the provided Vercel URL for the proxy
+        var proxyUrl = `https://proxyheaven.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
 
         fetch(proxyUrl)
           .then(response => response.text())
