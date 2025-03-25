@@ -71,42 +71,12 @@
   <div class="container">
     <h1>Embed a Website</h1>
     <input type="text" id="websiteURL" placeholder="Enter website URL (e.g., example.com)">
-    <button onclick="openWebsite()">Open Website</button>
+    <button id="openButton">Open Website</button>
     <div id="error-message">Please enter a valid URL (with http:// or https://).</div>
     <iframe id="websiteFrame"></iframe>
   </div>
 
-  <script>
-    function openWebsite() {
-      var url = document.getElementById("websiteURL").value;
-      var iframe = document.getElementById("websiteFrame");
-      var errorMessage = document.getElementById("error-message");
-
-      if (url) {
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-          url = "http://" + url;
-        }
-
-        // Use the provided Vercel URL for the proxy
-        var proxyUrl = `https://proxyheaven.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
-
-        fetch(proxyUrl)
-          .then(response => response.text())
-          .then(data => {
-            iframe.srcdoc = data;
-            iframe.style.display = "block";
-            errorMessage.style.display = "none";
-          })
-          .catch(err => {
-            errorMessage.style.display = "block";
-            iframe.style.display = "none";
-          });
-      } else {
-        errorMessage.style.display = "block";
-        iframe.style.display = "none";
-      }
-    }
-  </script>
+  <script src="script.js"></script>
 
 </body>
 </html>
