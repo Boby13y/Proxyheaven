@@ -1,17 +1,33 @@
-module.exports = async (req, res) => {
-  const { url } = req.query;
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("openButton").addEventListener("click", openWebsite);
+});
 
-  if (!url) {
-    return res.status(400).send('URL is required');
+function openWebsite() {
+  var url = document.getElementById("websiteURL").value;
+  var iframe = document.getElementById("websiteFrame");
+  var errorMessage = document.getElementById("error-message");
+
+  if (url) {
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = "http://" + url;
+    }
+
+    // Use the provided Vercel URL for the proxy
+    var proxyUrl = `https://proxyheaven.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
+
+    fetch(proxyUrl)
+      .then(response => response.text())
+      .then(data => {
+        iframe.srcdoc = data;
+        iframe.style.display = "block";
+        errorMessage.style.display = "none";
+      })
+      .catch(err => {
+        errorMessage.style.display = "block";
+        iframe.style.display = "none";
+      });
+  } else {
+    errorMessage.style.display = "block";
+    iframe.style.display = "none";
   }
-
-  try {
-    const response = await fetch(url);  // Fetch the content of the requested website
-    const body = await response.text();  // Get the HTML content
-
-    res.setHeader('Content-Type', 'text/html');
-    res.send(body);  // Return the HTML content
-  } catch (error) {
-    res.status(500).send('Error fetching website content');
-  }
-};
+}
