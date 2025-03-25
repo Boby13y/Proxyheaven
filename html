@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embed Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    iframe {
+      margin-top: 20px;
+      width: 100%;
+      height: 500px;
+      border: none;
+      display: none;
+    }
+
+    #error-message {
+      font-size: 14px;
+      color: red;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Embed a Website</h1>
+    <input type="text" id="websiteURL" placeholder="Enter website URL (e.g., example.com)">
+    <button onclick="openWebsite()">Open Website</button>
+    <div id="error-message">Please enter a valid URL (with http:// or https://).</div>
+    <iframe id="websiteFrame"></iframe>
+  </div>
+
+  <script>
+    function openWebsite() {
+      var url = document.getElementById("websiteURL").value;
+      var iframe = document.getElementById("websiteFrame");
+      var errorMessage = document.getElementById("error-message");
+
+      if (url) {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+          url = "http://" + url;
+        }
+
+        // Call the Vercel/Netlify function to proxy the URL
+        var proxyUrl = `https://your-vercel-domain.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
+
+        fetch(proxyUrl)
+          .then(response => response.text())
+          .then(data => {
+            iframe.srcdoc = data;
+            iframe.style.display = "block";
+            errorMessage.style.display = "none";
+          })
+          .catch(err => {
+            errorMessage.style.display = "block";
+            iframe.style.display = "none";
+          });
+      } else {
+        errorMessage.style.display = "block";
+        iframe.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
